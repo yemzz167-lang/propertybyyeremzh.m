@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yeremia Estate - Home</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <div class="logo gold-text">YEREMIA ESTATE</div>
+        <ul>
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="tutors.html">Tutors</a></li>
+            <li><a href="partners.html">Partners</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="login.html">Login</a></li>
+        </ul>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <h1 class="gold-text">LUXURY LIVING</h1>
+        <p>Temukan hunian eksklusif yang menggabungkan kemewahan klasik dengan kenyamanan modern. Investasi properti terbaik untuk masa depan Anda.</p>
+        <a href="tutors.html" class="btn-hero">LIHAT KOLEKSI</a>
+    </section>
+
+    <!-- TOMBOL & AI ASISTEN -->
+    <button class="chat-toggle" onclick="toggleChat()">💬</button>
+
+    <div class="chat-container" id="chatContainer">
+        <div class="chat-header">
+            <h4>AI Asisten Properti</h4>
+            <span onclick="toggleChat()">✖</span>
+        </div>
+        <div class="chat-box" id="chatBox">
+            <div class="msg-bot">Halo! Saya asisten virtual Yeremia Estate. Ada yang bisa saya bantu? (Coba ketik: "rumah", "apartemen", atau "harga")</div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="userInput" placeholder="Ketik pesan..." onkeypress="handleKeyPress(event)">
+            <button onclick="kirimPesan()">Kirim</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleChat() {
+            var chat = document.getElementById('chatContainer');
+            chat.style.display = (chat.style.display === 'flex') ? 'none' : 'flex';
+        }
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') kirimPesan();
+        }
+        function kirimPesan() {
+            var input = document.getElementById('userInput');
+            var pesan = input.value.trim();
+            if (pesan === "") return;
+            var chatBox = document.getElementById('chatBox');
+            chatBox.innerHTML += `<div class="msg-user">${pesan}</div>`;
+            input.value = "";
+            chatBox.scrollTop = chatBox.scrollHeight;
+            setTimeout(function() {
+                var balasan = "";
+                var lowerPesan = pesan.toLowerCase();
+                if (lowerPesan.includes("rumah") || lowerPesan.includes("mansion")) {
+                    balasan = "Kami punya 'The Grand Mansion' di Jakarta Selatan seharga Rp 15 Miliar. Mau saya hubungkan ke WA untuk detail?";
+                } else if (lowerPesan.includes("apartemen") || lowerPesan.includes("penthouse")) {
+                    balasan = "Ada 'Skyline Penthouse' di Jakarta Pusat, Rp 8.5 Miliar. View kota 360 derajat! Tertarik?";
+                } else if (lowerPesan.includes("villa") || lowerPesan.includes("bali")) {
+                    balasan = "Kami punya 'Bali Tropical Villa' Rp 12 Miliar. Pemandangan laut langsung. Mau info lanjut?";
+                } else if (lowerPesan.includes("harga") || lowerPesan.includes("biaya")) {
+                    balasan = "Harga properti kami mulai dari Rp 8.5 Miliar hingga Rp 15 Miliar. Ada budget spesifik?";
+                } else if (lowerPesan.includes("wa") || lowerPesan.includes("whatsapp") || lowerPesan.includes("beli")) {
+                    balasan = "Silakan klik tombol hijau 'Order via WA' di kartu properti, atau hubungi langsung di +6282258421215.";
+                } else {
+                    balasan = "Maaf, saya belum paham. Coba ketik 'rumah', 'apartemen', 'villa', atau 'harga' ya.";
+                }
+                chatBox.innerHTML += `<div class="msg-bot">${balasan}</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 800);
+        }
+    </script>
+
+</body>
+</html>
