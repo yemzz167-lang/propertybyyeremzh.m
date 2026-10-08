@@ -5,30 +5,170 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yeremia Estate - Login</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="login-page">
 
+    <!-- PARTICLE CANVAS -->
+    <canvas id="particles"></canvas>
+
+    <!-- NAVBAR -->
     <nav>
-        <div class="logo gold-text">YEREMIA ESTATE</div>
+        <div class="logo">
+            <span class="logo-icon">◆</span>
+            <span class="gold-text">YEREMIA</span> ESTATE
+        </div>
         <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="tutors.html">Tutors</a></li>
             <li><a href="partners.html">Partners</a></li>
             <li><a href="contact.html">Contact</a></li>
-            <li><a href="login.html" class="active">Login</a></li>
+            <li><a href="login.html" class="btn-login active">Login</a></li>
         </ul>
     </nav>
-    
-    <section class="page-section" style="display:flex; justify-content:center; align-items:center;">
-        <div style="background:#111622; padding:40px; border-radius:10px; border:1px solid #1a1f2e; width:100%; max-width:400px;">
-            <h2 style="color:#d4af37; text-align:center; margin-bottom:30px;">Login Admin</h2>
-            <form>
-                <input type="text" placeholder="Username" style="width:100%; padding:12px; margin-bottom:15px; background:#0a0e17; border:1px solid #1a1f2e; color:white; border-radius:5px;">
-                <input type="password" placeholder="Password" style="width:100%; padding:12px; margin-bottom:20px; background:#0a0e17; border:1px solid #1a1f2e; color:white; border-radius:5px;">
-                <button type="submit" style="width:100%; padding:12px; background:#d4af37; border:none; border-radius:5px; font-weight:bold; cursor:pointer;">MASUK</button>
+
+    <!-- LOGIN SECTION -->
+    <section class="login-section">
+        
+        <!-- Blob decorations -->
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+
+        <!-- LOGIN CARD -->
+        <div class="login-card">
+
+            <!-- Animated border glow -->
+            <div class="card-border-glow"></div>
+
+            <!-- Logo di atas -->
+            <div class="login-header">
+                <div class="login-logo">◆</div>
+                <h1 class="login-title">
+                    Selamat <span class="gold-text">Datang</span>
+                </h1>
+                <p class="login-subtitle">Masuk ke akun Yeremia Estate Anda</p>
+            </div>
+
+            <!-- FORM LOGIN -->
+            <form class="login-form" onsubmit="handleLogin(event)">
+
+                <!-- Input Email/Username -->
+                <div class="login-input-group">
+                    <div class="input-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                    </div>
+                    <input type="text" id="email" required placeholder=" ">
+                    <label for="email">Email atau Username</label>
+                </div>
+
+                <!-- Input Password -->
+                <div class="login-input-group">
+                    <div class="input-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0110 0v4"/>
+                        </svg>
+                    </div>
+                    <input type="password" id="password" required placeholder=" ">
+                    <label for="password">Password</label>
+                    <button type="button" class="toggle-pass" onclick="togglePassword()" aria-label="Toggle password">
+                        <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Remember & Forgot -->
+                <div class="login-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="remember">
+                        <span class="checkmark"></span>
+                        <span>Ingat saya</span>
+                    </label>
+                    <a href="#" class="forgot-link">Lupa password?</a>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-login-submit" id="loginBtn">
+                    <span class="btn-text">MASUK</span>
+                    <span class="btn-loader"></span>
+                </button>
+
+                <!-- Divider -->
+                <div class="divider">
+                    <span>atau masuk dengan</span>
+                </div>
+
+                <!-- Social Login -->
+                <div class="social-login">
+                    <button type="button" class="social-btn" onclick="loginSocial('Google')">
+                        <svg width="20" height="20" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        <span>Google</span>
+                    </button>
+                    <button type="button" class="social-btn" onclick="loginSocial('Facebook')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877F2">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                        <span>Facebook</span>
+                    </button>
+                </div>
+
             </form>
+
+            <!-- Register Link -->
+            <p class="register-link">
+                Belum punya akun? <a href="#" class="gold-text">Daftar Sekarang</a>
+            </p>
+
         </div>
+
+        <!-- Side info -->
+        <div class="login-side-info">
+            <h2 class="side-title">Akses <span class="gold-text">Eksklusif</span></h2>
+            <ul class="side-features">
+                <li>
+                    <span class="side-icon">🔒</span>
+                    <div>
+                        <strong>Data Terenkripsi</strong>
+                        <p>Keamanan level perbankan</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="side-icon">⚡</span>
+                    <div>
+                        <strong>Akses Instan</strong>
+                        <p>Lihat koleksi eksklusif</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="side-icon">👑</span>
+                    <div>
+                        <strong>Prioritas VIP</strong>
+                        <p>Konsultasi dengan agen senior</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
     </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2025 Yeremia Estate. All Rights Reserved.</p>
+    </footer>
+
+    <script src="login.js"></script>
+    <script src="transition.js"></script>
 
 </body>
 </html>

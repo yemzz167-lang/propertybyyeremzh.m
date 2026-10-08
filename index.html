@@ -36,7 +36,7 @@
             <span onclick="toggleChat()">✖</span>
         </div>
         <div class="chat-box" id="chatBox">
-            <div class="msg-bot">Halo! Saya asisten virtual Yeremia Estate. Ada yang bisa saya bantu? (Coba ketik: "rumah", "apartemen", atau "harga")</div>
+            <div class="msg-bot">Halo! Saya asisten virtual Yeremia Estate. Ada yang bisa saya bantu? </div>
         </div>
         <div class="chat-input">
             <input type="text" id="userInput" placeholder="Ketik pesan..." onkeypress="handleKeyPress(event)">
@@ -44,43 +44,104 @@
         </div>
     </div>
 
-    <script>
-        function toggleChat() {
-            var chat = document.getElementById('chatContainer');
-            chat.style.display = (chat.style.display === 'flex') ? 'none' : 'flex';
-        }
-        function handleKeyPress(e) {
-            if (e.key === 'Enter') kirimPesan();
-        }
-        function kirimPesan() {
-            var input = document.getElementById('userInput');
-            var pesan = input.value.trim();
-            if (pesan === "") return;
-            var chatBox = document.getElementById('chatBox');
-            chatBox.innerHTML += `<div class="msg-user">${pesan}</div>`;
-            input.value = "";
-            chatBox.scrollTop = chatBox.scrollHeight;
-            setTimeout(function() {
-                var balasan = "";
-                var lowerPesan = pesan.toLowerCase();
-                if (lowerPesan.includes("rumah") || lowerPesan.includes("mansion")) {
-                    balasan = "Kami punya 'The Grand Mansion' di Jakarta Selatan seharga Rp 15 Miliar. Mau saya hubungkan ke WA untuk detail?";
-                } else if (lowerPesan.includes("apartemen") || lowerPesan.includes("penthouse")) {
-                    balasan = "Ada 'Skyline Penthouse' di Jakarta Pusat, Rp 8.5 Miliar. View kota 360 derajat! Tertarik?";
-                } else if (lowerPesan.includes("villa") || lowerPesan.includes("bali")) {
-                    balasan = "Kami punya 'Bali Tropical Villa' Rp 12 Miliar. Pemandangan laut langsung. Mau info lanjut?";
-                } else if (lowerPesan.includes("harga") || lowerPesan.includes("biaya")) {
-                    balasan = "Harga properti kami mulai dari Rp 8.5 Miliar hingga Rp 15 Miliar. Ada budget spesifik?";
-                } else if (lowerPesan.includes("wa") || lowerPesan.includes("whatsapp") || lowerPesan.includes("beli")) {
-                    balasan = "Silakan klik tombol hijau 'Order via WA' di kartu properti, atau hubungi langsung di +6282258421215.";
-                } else {
-                    balasan = "Maaf, saya belum paham. Coba ketik 'rumah', 'apartemen', 'villa', atau 'harga' ya.";
-                }
-                chatBox.innerHTML += `<div class="msg-bot">${balasan}</div>`;
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }, 800);
-        }
-    </script>
+   <script>
+    // ============================================
+    // AI ASISTEN GENERATIF — Yeremia Estate
+    // ============================================
+    
+    // System prompt: aturan cara AI menjawab
+    const SYSTEM_PROMPT = `Kamu adalah asisten properti mewah "Yeremia Estate" yang ramah, sopan, dan profesional.
+Kamu membantu klien menemukan properti impian mereka.
 
+Koleksi properti unggulan:
+- The Grand Mansion (Jakarta Selatan) - Rp 15 Miliar - mansion mewah 5 kamar tidur, kolam renang pribadi
+- Skyline Penthouse (Jakarta Pusat) - Rp 8.5 Miliar - penthouse dengan view kota 360 derajat
+- Bali Tropical Villa (Bali) - Rp 12 Miliar - villa dengan pemandangan laut langsung
+
+Aturan:
+1. Jawab dengan singkat (maksimal 3 kalimat)
+2. Ramah, natural, gunakan bahasa Indonesia
+3. Jika klien ingin membeli, arahkan ke WhatsApp: +6282258421215
+4. Selalu tawarkan bantuan lebih lanjut`;
+
+    let isProcessing = false;
+
+    function toggleChat() {
+        const chat = document.getElementById('chatContainer');
+        chat.style.display = (chat.style.display === 'flex') ? 'none' : 'flex';
+    }
+
+    function handleKeyPress(e) {
+        if (e.key === 'Enter' && !isProcessing) kirimPesan();
+    }
+
+    function addMessage(text, sender) {
+        const chatBox = document.getElementById('chatBox');
+        const div = document.createElement('div');
+        div.className = sender === 'user' ? 'msg-user' : 'msg-bot';
+        div.textContent = text;
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        return div;
+    }
+
+    function showTyping() {
+        const chatBox = document.getElementById('chatBox');
+        const typing = document.createElement('div');
+        typing.className = 'typing';
+        typing.id = 'typingIndicator';
+        typing.innerHTML = '<span></span><span></span><span></span>';
+        chatBox.appendChild(typing);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function hideTyping() {
+        const t = document.getElementById('typingIndicator');
+        if (t) t.remove();
+    }
+
+    async function kirimPesan() {
+        const input = document.getElementById('userInput');
+        const pesan = input.value.trim();
+        if (pesan === "" || isProcessing) return;
+
+        // Tampilkan pesan user
+        addMessage(pesan, 'user');
+        input.value = "";
+        isProcessing = true;
+
+        // Tampilkan indikator mengetik
+        showTyping();
+
+        try {
+            // Panggil AI generatif via Pollinations (gratis, tanpa API key)
+            const url = `https://text.pollinations.ai/${encodeURIComponent(
+                SYSTEM_PROMPT + "\n\nPertanyaan klien: " + pesan
+            )}?model=openai`;
+
+            const response = await fetch(url);
+            let balasan = await response.text();
+
+            balasan = balasan.trim();
+            if (!balasan || balasan.length < 2) {
+                balasan = "Maaf, saya sedang sibuk. Silakan hubungi +6282258421215 untuk bantuan langsung.";
+            }
+
+            hideTyping();
+            addMessage(balasan, 'bot');
+
+        } catch (error) {
+            hideTyping();
+            addMessage(
+                "Ups, koneksi saya terganggu. Silakan hubungi kami langsung di WhatsApp +6282258421215 😊",
+                'bot'
+            );
+            console.error('AI Error:', error);
+        } finally {
+            isProcessing = false;
+            input.focus();
+        }
+    }
+</script>
 </body>
 </html>
