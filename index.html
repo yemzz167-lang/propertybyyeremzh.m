@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yeremia Estate - Home</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://js.puter.com/v2/"></script>
 </head>
 <body>
 
@@ -100,48 +101,40 @@ Aturan:
         if (t) t.remove();
     }
 
-    async function kirimPesan() {
-        const input = document.getElementById('userInput');
-        const pesan = input.value.trim();
-        if (pesan === "" || isProcessing) return;
+   async function kirimPesan() {
+    const input = document.getElementById('userInput');
+    const pesan = input.value.trim();
+    if (pesan === "" || isProcessing) return;
 
-        // Tampilkan pesan user
-        addMessage(pesan, 'user');
-        input.value = "";
-        isProcessing = true;
+    // Tampilkan pesan user
+    addMessage(pesan, 'user');
+    input.value = "";
+    isProcessing = true;
 
-        // Tampilkan indikator mengetik
-        showTyping();
+    // Tampilkan indikator mengetik
+    showTyping();
 
-        try {
-            // Panggil AI generatif via Pollinations (gratis, tanpa API key)
-            const url = `https://text.pollinations.ai/${encodeURIComponent(
-                SYSTEM_PROMPT + "\n\nPertanyaan klien: " + pesan
-            )}?model=openai`;
+    try {
+        // Panggil AI via Puter.js (tanpa API Key)
+        const balasan = await puter.ai.chat(
+            SYSTEM_PROMPT + "\n\nPertanyaan klien: " + pesan
+        );
 
-            const response = await fetch(url);
-            let balasan = await response.text();
+        hideTyping();
+        addMessage(balasan, 'bot');
 
-            balasan = balasan.trim();
-            if (!balasan || balasan.length < 2) {
-                balasan = "Maaf, saya sedang sibuk. Silakan hubungi +6282258421215 untuk bantuan langsung.";
-            }
-
-            hideTyping();
-            addMessage(balasan, 'bot');
-
-        } catch (error) {
-            hideTyping();
-            addMessage(
-                "Ups, koneksi saya terganggu. Silakan hubungi kami langsung di WhatsApp +6282258421215 😊",
-                'bot'
-            );
-            console.error('AI Error:', error);
-        } finally {
-            isProcessing = false;
-            input.focus();
-        }
+    } catch (error) {
+        hideTyping();
+        addMessage(
+            "Ups, koneksi saya terganggu. Silakan hubungi kami langsung di WhatsApp +6282258421215 😊",
+            'bot'
+        );
+        console.error('AI Error:', error);
+    } finally {
+        isProcessing = false;
+        input.focus();
     }
+}
 </script>
 <script src="transition.js"></script>
 </body>
